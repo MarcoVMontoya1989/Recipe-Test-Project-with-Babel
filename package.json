@@ -1,0 +1,17 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "project with es6 babel and webpack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marco Antonio V Montoya Cardenas",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.41.5"
+  },
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
+}
