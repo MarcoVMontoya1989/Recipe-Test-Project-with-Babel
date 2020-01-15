@@ -4,12 +4,26 @@
   "description": "project with es6 babel and webpack",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server --mode development --open"
   },
   "author": "Marco Antonio V Montoya Cardenas",
   "license": "ISC",
   "devDependencies": {
-    "webpack": "^4.41.5"
+    "@babel/cli": "^7.8.0",
+    "@babel/core": "^7.8.0",
+    "@babel/preset-env": "^7.8.2",
+    "babel-loader": "^8.0.6",
+    "html-webpack-plugin": "^3.2.0",
+    "standard": "^14.3.1",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "axios": "^0.19.1",
+    "core-js": "^3.6.4",
+    "regenerator-runtime": "^0.13.3"
+  }
 }
