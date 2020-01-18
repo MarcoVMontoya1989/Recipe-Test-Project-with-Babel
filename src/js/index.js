@@ -1,6 +1,6 @@
 import Search from './models/Search';
 import * as searchView from './views/searchView';
-import { elements } from './views/base';
+import { elements, renderLoader, clearLoader } from './views/base'
 
 /*
 * GLOBAL STATE of the APP
@@ -23,12 +23,14 @@ const controlSearch = async () => {
     //3) Prepare UI for results
     searchView.clearInputSearch();
     searchView.clearResultFields();
+    renderLoader(elements.searchRes); //loading icon
 
     //4) Search for recipes
     await state.search.getResults();
 
     //5) Render results on UI
-    console.log('result state',state.search.result);
+    // console.log('result state',state.search.result);
+    clearLoader(); //remove loader after received the promise
     searchView.renderResults(state.search.result);
 
   } else {
@@ -41,5 +43,14 @@ elements.searchForm.addEventListener('submit', el => {
   controlSearch().then(r => console.log(`testing ${r}`));
 });
 
+// event delegation for buttons because it's not yet generated
+elements.searchResPagesButton.addEventListener('click', ev => {
+  // console.log(ev.target);
+  const btn = ev.target.closest('.btn-inline');
 
-// search.getResult();
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.goto, 10);
+    searchView.clearResultFields();
+    searchView.renderResults(state.search.result, goToPage);
+  }
+});
