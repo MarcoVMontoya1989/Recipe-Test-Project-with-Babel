@@ -1,8 +1,9 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import List from './models/List';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
-
+import * as listView from './views/listView';
 import { elements, renderLoader, clearLoader } from './views/base'
 import { clearRecipe } from './views/recipeView'
 
@@ -84,7 +85,19 @@ const controlRecipe = async () => {
 
   }
 
-}
+};
+
+const controlList = () => {
+  //create a new list if it there none yet 
+  if (!state.list) state.list = new List();
+  
+  // add the ingredients to the list from the Recipe Selected and UI
+  state.recipe.ingredients.forEach(el => {
+    const newList = state.list.addNewItem(el.count, el.unit, el.ingredient);
+
+    listView.renderItemList(newList);
+  });
+};
 
 // resultRecipeSearched.getRecipe();
 // window.addEventListener('hashchange', controlRecipe);
@@ -113,3 +126,40 @@ elements.searchResPagesButton.addEventListener('click', ev => {
     searchView.renderResults(state.search.result, goToPage);
   }
 });
+
+//Handling recipe button clicks
+elements.recipe.addEventListener('click', e => {
+  if (e.target.matches('.btn-decrease, .btn-decrease *')) {
+    //decrease servings
+    if (state.recipe.servings > 1) {
+      state.recipe.updateServings('dec');
+      recipeView.updateIngredientsServings(state.recipe);
+    }
+  } else if (e.target.matches('.btn-increase, .btn-increase *')) {
+    //increase servings
+    state.recipe.updateServings('inc');
+    recipeView.updateIngredientsServings(state.recipe);
+  } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+    controlList();
+  }
+});
+
+//handling delete and update the list events
+elements.shopping.addEventListener('click', e => {
+  const idToDelete = e.target.closest('.shopping__item').dataset.itemid;
+
+  //handle the delete button
+  if(e.target.matches('.shopping__delete, .shopping__delete *')) {
+    //delete from state
+    state.list.deleteItemSelected(idToDelete);
+
+    //delete from UI
+    listView.deleteItemList(idToDelete);
+  } else if(e.target.matches('.shopping__count-value')) {
+    const val = parseFloat(e.target.value, 10);
+    
+    state.list.updateCount(idToDelete, val);
+  }
+});
+
+window.l = new List();
