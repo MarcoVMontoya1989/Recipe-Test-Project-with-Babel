@@ -95,5 +95,17 @@ export default class Recipe {
 
       return objIng;
     });
+  };
+
+  updateServings(type /*for increase or decrease*/) {
+    //Servings
+    const newServings = type === 'dec' ? this.servings -1 : this.servings + 1;
+
+    //Ingredients
+    this.ingredients.forEach(serv => {
+      serv.count *= (newServings / this.servings);
+    })
+
+    this.servings = newServings;
   }
 }
