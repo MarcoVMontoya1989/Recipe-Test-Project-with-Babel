@@ -52,12 +52,14 @@ const controlRecipe = async () => {
   if (id) {
     //prepare UI for changes
 
-    //create new recipes
+    //create new recipes and parse ingredients
     state.recipe = new Recipe(id);
 
     //get recipe data
     try {
       await state.recipe.getRecipe();
+      state.recipe.parseIngredients();
+
       //calculate serving and time data
       state.recipe.calcServings();
       state.recipe.calcTime();
@@ -79,6 +81,11 @@ const controlRecipe = async () => {
 
 
 elements.searchForm.addEventListener('submit', el => {
+  el.preventDefault();
+  controlSearch().then(r => console.log(`testing ${r}`));
+});
+
+elements.searchForm.addEventListener('load', el => {
   el.preventDefault();
   controlSearch().then(r => console.log(`testing ${r}`));
 });
