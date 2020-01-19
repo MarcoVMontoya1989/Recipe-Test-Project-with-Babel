@@ -1,4 +1,5 @@
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
 import { elements, renderLoader, clearLoader } from './views/base'
 
@@ -26,17 +27,56 @@ const controlSearch = async () => {
     renderLoader(elements.searchRes); //loading icon
 
     //4) Search for recipes
-    await state.search.getResults();
+    try {
+      await state.search.getResults();
 
-    //5) Render results on UI
-    // console.log('result state',state.search.result);
-    clearLoader(); //remove loader after received the promise
-    searchView.renderResults(state.search.result);
+      //5) Render results on UI
+      // console.log('result state',state.search.result);
+      clearLoader(); //remove loader after received the promise
+      searchView.renderResults(state.search.result);
+    } catch (e) {
+      alert('Error');
+      clearLoader();
+    }
 
   } else {
     alert(`it's empty`);
   }
+};
+
+// const resultRecipeSearched = new Recipe(46956);
+const controlRecipe = async () => {
+  //get ID from the URL Example: /api/get?rId=12345 or #12345
+  const id = window.location.hash.replace('#', '');
+
+  if (id) {
+    //prepare UI for changes
+
+    //create new recipes
+    state.recipe = new Recipe(id);
+
+    //get recipe data
+    try {
+      await state.recipe.getRecipe();
+      //calculate serving and time data
+      state.recipe.calcServings();
+      state.recipe.calcTime();
+
+      //render recipe
+      console.log(state.recipe);
+    } catch (e) {
+      alert(`Something is wrong: ${e}`);
+    }
+
+  }
+
 }
+
+// resultRecipeSearched.getRecipe();
+// window.addEventListener('hashchange', controlRecipe);
+// window.addEventListener('load', controlRecipe);
+['load', 'hashchange'].forEach(event => window.addEventListener(event, controlRecipe));
+
 
 elements.searchForm.addEventListener('submit', el => {
   el.preventDefault();
