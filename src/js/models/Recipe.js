@@ -35,6 +35,7 @@ export default class Recipe {
 
   parseIngredients() {
     const unitsLong = unitLongAbr, shortUnits = unitShortAbr;
+    const units = [...shortUnits, 'kg', 'g'];
 
     this.ingredients = this.ingredients.map(el => {
       // 1) Uniform units
@@ -59,6 +60,7 @@ export default class Recipe {
         //EX: 4 1/2 cups = arrCount[4, 1/2]
         //EX: 4 cups = arrCount[4]
         const arrCount = arrIng.slice(0, unitIndex);
+
         let count;
 
         if (arrCount.length === 1) {
@@ -74,7 +76,7 @@ export default class Recipe {
           ingredient: arrIng.slice(unitIndex + 1).join(' '),
         }
 
-      } else if (parseInt(arrIng[1], 10)) {
+      } else if (parseInt(arrIng[0], 10)) {
         //there's no unit but the first element is number
         objIng = {
           count: parseInt(arrIng[0], 10),

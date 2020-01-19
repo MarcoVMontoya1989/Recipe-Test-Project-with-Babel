@@ -1,7 +1,10 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
+
 import { elements, renderLoader, clearLoader } from './views/base'
+import { clearRecipe } from './views/recipeView'
 
 /*
 * GLOBAL STATE of the APP
@@ -51,6 +54,8 @@ const controlRecipe = async () => {
 
   if (id) {
     //prepare UI for changes
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
 
     //create new recipes and parse ingredients
     state.recipe = new Recipe(id);
@@ -65,7 +70,9 @@ const controlRecipe = async () => {
       state.recipe.calcTime();
 
       //render recipe
-      console.log(state.recipe);
+      clearLoader();
+      recipeView.clearRecipe();
+      recipeView.renderRecipe(state.recipe);
     } catch (e) {
       alert(`Something is wrong: ${e}`);
     }
