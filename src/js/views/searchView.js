@@ -47,7 +47,7 @@ export const clearResultFields = () => {
   elements.searchResPagesButton.innerHTML = '';
 };
 
-const limitRecipeTitle = (recipeTitle, limit = 17) => {
+export const limitRecipeTitle = (recipeTitle, limit = 17) => {
   const newTitle = [];
 
   if (recipeTitle.length > limit ) {
