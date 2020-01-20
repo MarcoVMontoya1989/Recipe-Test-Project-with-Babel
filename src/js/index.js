@@ -80,7 +80,7 @@ const controlRecipe = async () => {
       clearLoader();
       recipeView.clearRecipe();
       recipeView.renderRecipe(state.recipe,
-        state.like.isLiked(id)
+        state.likes.isLiked(id)
         );
     } catch (e) {
       alert(`Something is wrong: ${e}`);
@@ -102,45 +102,53 @@ const controlList = () => {
   });
 };
 
-state.like = new Likes();
+// restore liked recipes on load page with localStorage
+window.addEventListener('load', () => {
+  state.likes = new Likes();
+
+  state.likes.readStorage();
+
+  likeView.toggleLikeMenu(state.likes.getNumLikes());
+
+  state.likes.likes.forEach(like => likeView.renderLikes(like));
+});
 
 const controlLike = () => {
-  if (!state.like) state.like = new Likes();
+  if (!state.likes) state.likes = new Likes();
 
   const currentID = state.recipe.recipeID;
 
   //add the liked recipe to the Likes list and UI
-  if (!state.like.isLiked(currentID)) {
+  if (!state.likes.isLiked(currentID)) {
     //add to the state
-    const newLike = state.like.addLike(currentID,
+    const newLike = state.likes.addLike(currentID,
       state.recipe.recipeTitle,
       state.recipe.recipeAuthor,
       state.recipe.img);
     //toggle the like button
     likeView.toggleLikeBtn(true);
 
-    // console.log(state.like);
+    // console.log(state.likes);
     //add the like to the UI
     likeView.renderLikes(newLike);
 
   } else {
     //remove to the state
-    state.like.deleteLikeId(currentID);
+    state.likes.deleteLikeId(currentID);
     //toggle the like button
     likeView.toggleLikeBtn(false);
     //remove the like to the UI
     likeView.deleteLikeListMenu(currentID);
-    // console.log(state.like);
+    // console.log(state.likes);
   }
 
-  likeView.toggleLikeMenu(state.like.getNumLikes());
+  likeView.toggleLikeMenu(state.likes.getNumLikes());
 }
 
 // resultRecipeSearched.getRecipe();
 // window.addEventListener('hashchange', controlRecipe);
 // window.addEventListener('load', controlRecipe);
 ['load', 'hashchange'].forEach(event => window.addEventListener(event, controlRecipe));
-
 
 elements.searchForm.addEventListener('submit', el => {
   el.preventDefault();
@@ -201,5 +209,3 @@ elements.shopping.addEventListener('click', e => {
     state.list.updateCount(idToDelete, val);
   }
 });
-
-window.l = new List();
